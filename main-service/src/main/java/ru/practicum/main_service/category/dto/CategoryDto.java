@@ -1,4 +1,4 @@
-package ru.practicum.stats_common.model;
+package ru.practicum.main_service.category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,14 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
-@Builder
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewStats {
-    private String app;
-    private String uri;
-    private Long hits;
+@Builder
+@EqualsAndHashCode
+public class CategoryDto {
+
+    private Long id;
+
+    @NotBlank
+    private String name;
+
 }
