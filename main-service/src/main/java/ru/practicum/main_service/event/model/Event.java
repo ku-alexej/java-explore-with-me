@@ -1,12 +1,7 @@
 package ru.practicum.main_service.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.main_service.constant.Constants;
 import ru.practicum.main_service.category.model.Category;
 import ru.practicum.main_service.event.enums.EventState;
@@ -16,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +23,6 @@ import java.time.LocalDateTime;
 @Table(name = "events", schema = "public")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Event {
 
     @Id
@@ -44,7 +35,7 @@ public class Event {
     @Column(nullable = false, length = Constants.MAX_ANNOTATION)
     private String annotation;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
@@ -60,7 +51,7 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime eventDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
@@ -73,9 +64,8 @@ public class Event {
 
     private LocalDateTime publishedOn;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User initiator;
 
     @Column(nullable = false)

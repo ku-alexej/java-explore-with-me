@@ -53,8 +53,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
         log.info("MainService - updateCategory: catId={}, categoryDto={}", catId, categoryDto);
 
-        categoryRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Category with ID " + catId + " does not exist"));
+        if (!categoryRepository.existsById(catId)) {
+            throw new NotFoundException("Category with ID " + catId + " does not exist");
+        }
 
         categoryDto.setId(catId);
         return mapper.toCategoryDto(categoryRepository.save(mapper.categoryDtoToCategory(categoryDto)));
@@ -64,8 +65,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategoryById(Long catId) {
         log.info("MainService - deleteCategoryById: catId={}", catId);
 
-        categoryRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Category with ID " + catId + " does not exist"));
+        if (!categoryRepository.existsById(catId)) {
+            throw new NotFoundException("Category with ID " + catId + " does not exist");
+        }
 
         categoryRepository.deleteById(catId);
     }

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -121,7 +120,7 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> getAllEventsByPrivate(Long userId, Pageable pageable) {
         log.info("MainService - getAllEventsByPrivate: userId={}, pageable={}", userId, pageable);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pageable);
 
         return toEventsShortDto(events);
@@ -147,7 +146,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEventByPrivate(Long userId, Long eventId) {
         log.info("MainService - getEventByPrivate: userId={}, eventId={}", userId, eventId);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
         Event event = getEventByIdAndInitiatorId(eventId, userId);
 
         return toEventFullDto(eventRepository.save(event));
@@ -158,7 +157,7 @@ public class EventServiceImpl implements EventService {
         log.info("MainService - patchEventByPrivate: userId={}, eventId={}, {}", userId, eventId, updateEventUserRequest);
 
         checkNewEventDate(updateEventUserRequest.getEventDate(), LocalDateTime.now().plusHours(2));
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
         Event event = getEventByIdAndInitiatorId(eventId, userId);
 
         if (event.getState().equals(EventState.PUBLISHED)) {
@@ -220,8 +219,8 @@ public class EventServiceImpl implements EventService {
             return List.of();
         }
 
-        Map<Long, Integer> eventsParticipantLimit = new HashMap<>();
-        events.forEach(event -> eventsParticipantLimit.put(event.getId(), event.getParticipantLimit()));
+        Map<Long, Integer> eventsParticipantLimit = events.stream()
+                .collect(Collectors.toMap(Event::getId, Event::getParticipantLimit));
         List<EventShortDto> eventsShortDto = toEventsShortDto(events);
 
         if (onlyAvailable) {

@@ -40,7 +40,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getEventRequestsByRequester(Long userId) {
         log.info("MainService - getEventRequestsByRequester: userId={}", userId);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
 
         return toParticipationRequestsDto(requestRepository.findAllByRequesterId(userId));
     }
@@ -89,7 +89,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto cancelEventRequest(Long userId, Long requestId) {
         log.info("MainService - cancelEventRequest: userId={}, requestId={}", userId, requestId);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
 
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request with ID " + requestId + " doesn't exist"));
@@ -105,7 +105,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getEventRequestsByEventOwner(Long userId, Long eventId) {
         log.info("MainService - getEventRequestsByEventOwner: userId={}, eventId={}", userId, eventId);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
         Event event = eventService.getEventById(eventId);
         checkUserIsOwner(event.getInitiator().getId(), userId);
 
@@ -118,7 +118,7 @@ public class RequestServiceImpl implements RequestService {
         log.info("MainService - patchEventRequestsByEventOwner: userId={}, eventId={}, eventRequestStatusUpdateRequest={}",
                 userId, eventId, eventRequestStatusUpdateRequest);
 
-        userService.getUserById(userId);
+        userService.checkUserInBase(userId);
         Event event = eventService.getEventById(eventId);
 
         checkUserIsOwner(event.getInitiator().getId(), userId);

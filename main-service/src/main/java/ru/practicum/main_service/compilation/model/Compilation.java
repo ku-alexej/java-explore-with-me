@@ -1,12 +1,7 @@
 package ru.practicum.main_service.compilation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.main_service.constant.Constants;
 import ru.practicum.main_service.event.model.Event;
 
@@ -25,9 +20,6 @@ import java.util.List;
 @Table(name = "compilations", schema = "public")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Compilation {
 
     @Id
@@ -44,7 +36,6 @@ public class Compilation {
     @JoinTable(name = "compilations_events",
             joinColumns = @JoinColumn(name = "compilation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"))
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Event> events;
 
 }
